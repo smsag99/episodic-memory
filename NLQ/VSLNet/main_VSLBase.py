@@ -14,7 +14,7 @@ from tqdm import tqdm
 from utils.data_gen import gen_or_load_dataset
 from utils.data_loader import get_test_loader, get_train_loader
 from utils.data_util import load_json, load_video_features, save_json
-from utils.runner_utils import (
+from utils.runner_utils_VSLBase import (
     convert_length_to_mask,
     eval_test,
     filter_checkpoints,
