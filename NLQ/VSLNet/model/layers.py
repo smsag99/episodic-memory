@@ -339,6 +339,55 @@ class FeatureEncoder(nn.Module):
         return features
 
 
+class FeatureEncoder_Text(nn.Module):
+    def __init__(
+        self, dim, num_heads, max_pos_len, kernel_size=7, num_layers=4, drop_rate=0.0
+    ):
+        super(FeatureEncoder_Text, self).__init__()
+        self.pos_embedding = PositionalEmbedding(
+            num_embeddings=max_pos_len, embedding_dim=dim
+        )
+        self.conv_block = DepthwiseSeparableConvBlock(
+            dim=dim, kernel_size=kernel_size, drop_rate=drop_rate, num_layers=num_layers
+        )
+        self.attention_block = MultiHeadAttentionBlock(
+            dim=dim, num_heads=num_heads, drop_rate=drop_rate
+        )
+
+    def forward(self, x, mask=None):
+        features = x + self.pos_embedding(x)  # (batch_size, seq_len, dim)
+        features = self.conv_block(features)  # (batch_size, seq_len, dim)
+        features = self.attention_block(
+            features, mask=mask
+        )  # (batch_size, seq_len, dim)
+        return features
+
+class FeatureEncoder_Video(nn.Module):
+    def __init__(
+        self, dim, num_heads, max_pos_len, kernel_size=7, num_layers=4, drop_rate=0.0
+    ):
+        super(FeatureEncoder_Video, self).__init__()
+        self.pos_embedding = PositionalEmbedding(
+            num_embeddings=max_pos_len, embedding_dim=dim
+        )
+        self.conv_block = DepthwiseSeparableConvBlock(
+            dim=dim, kernel_size=kernel_size, drop_rate=drop_rate, num_layers=num_layers
+        )
+        self.attention_block = MultiHeadAttentionBlock(
+            dim=dim, num_heads=num_heads, drop_rate=drop_rate
+        )
+
+    def forward(self, x, mask=None):
+        features = x + self.pos_embedding(x)  # (batch_size, seq_len, dim)
+        features = self.conv_block(features)  # (batch_size, seq_len, dim)
+        features = self.attention_block(
+            features, mask=mask
+        )  # (batch_size, seq_len, dim)
+        return features
+
+
+
+
 class CQAttention(nn.Module):
     def __init__(self, dim, drop_rate=0.0):
         super(CQAttention, self).__init__()
