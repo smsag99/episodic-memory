@@ -173,6 +173,12 @@ def read_command_line():
         help="Constraint on slurm",
     )
     parser.add_argument(
+        "--sameEncoder",
+        type=int,
+        default=1,
+        help="use same encoder? 0- No 1-Yes",
+    )
+    parser.add_argument(
         "--slurm_gpus",
         type=int,
         default=1,
