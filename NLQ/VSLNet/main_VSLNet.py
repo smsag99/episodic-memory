@@ -100,7 +100,7 @@ def main_VSLNet(configs, parser):
             save_pretty=True,
         )
         # build model
-        if(not configs.sameEncoder):
+        if(not configs.sameEncoder==1):
             model = VSLNet_DE(configs=configs, word_vectors=dataset.get("word_vector", None)).to(device)
         else:
             model = VSLNet(configs=configs, word_vectors=dataset.get("word_vector", None)).to(device)
@@ -239,7 +239,7 @@ def main_VSLNet(configs, parser):
         parser.set_defaults(**pre_configs)
         configs = parser.parse_args()
         # build model
-        if(not configs.sameEncoder):
+        if(not configs.sameEncoder==1):
             model = VSLNet_DE(configs=configs, word_vectors=dataset.get("word_vector", None)).to(device)
         else:
             model = VSLNet(configs=configs, word_vectors=dataset.get("word_vector", None)).to(device)
@@ -275,7 +275,6 @@ def create_executor(configs):
 
 if __name__ == "__main__":
     configs, parser = options.read_command_line()
-    print("main_VSLNet")
     if not configs.slurm:
         main_VSLNet(configs, parser)
     else:
