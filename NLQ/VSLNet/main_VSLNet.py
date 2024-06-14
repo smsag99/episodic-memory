@@ -10,6 +10,8 @@ import torch.nn as nn
 import submitit
 from torch.utils.tensorboard.writer import SummaryWriter
 from model.VSLNet import build_optimizer_and_scheduler, VSLNet
+from model.VSLNet_DE import build_optimizer_and_scheduler, VSLNet_DE
+
 from tqdm import tqdm
 from utils.data_gen import gen_or_load_dataset
 from utils.data_loader import get_test_loader, get_train_loader
@@ -23,7 +25,7 @@ from utils.runner_utils import (
 )
 
 
-def main(configs, parser):
+def main_VSLNet(configs, parser):
     print(f"Running with {configs}", flush=True)
 
     # set tensorflow configs
@@ -98,9 +100,10 @@ def main(configs, parser):
             save_pretty=True,
         )
         # build model
-        model = VSLNet(
-            configs=configs, word_vectors=dataset.get("word_vector", None)
-        ).to(device)
+        if(not configs.sameEncoder):
+            model = VSLNet_DE(configs=configs, word_vectors=dataset.get("word_vector", None)).to(device)
+        else:
+            model = VSLNet(configs=configs, word_vectors=dataset.get("word_vector", None)).to(device)
         optimizer, scheduler = build_optimizer_and_scheduler(model, configs=configs)
         # start training
         best_metric = -1.0
@@ -236,9 +239,11 @@ def main(configs, parser):
         parser.set_defaults(**pre_configs)
         configs = parser.parse_args()
         # build model
-        model = VSLNet(
-            configs=configs, word_vectors=dataset.get("word_vector", None)
-        ).to(device)
+        if(not configs.sameEncoder):
+            model = VSLNet_DE(configs=configs, word_vectors=dataset.get("word_vector", None)).to(device)
+        else:
+            model = VSLNet(configs=configs, word_vectors=dataset.get("word_vector", None)).to(device)
+            
 
         # get last checkpoint file
         filename = get_last_checkpoint(model_dir, suffix="t7")
@@ -270,12 +275,13 @@ def create_executor(configs):
 
 if __name__ == "__main__":
     configs, parser = options.read_command_line()
+    print("main_VSLNet")
     if not configs.slurm:
-        main(configs, parser)
+        main_VSLNet(configs, parser)
     else:
         executor = create_executor(configs)
 
-        job = executor.submit(main, configs, parser)
+        job = executor.submit(main_VSLNet, configs, parser)
         print("job=", job.job_id)
 
         # wait for it
