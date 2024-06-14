@@ -50,9 +50,9 @@ def build_optimizer_and_scheduler(model, configs):
     return optimizer, scheduler
 
 
-class VSLNet(nn.Module):
+class VSLNet_DE(nn.Module):
     def __init__(self, configs, word_vectors):
-        super(VSLNet, self).__init__()
+        super(VSLNet_DE, self).__init__()
         self.configs = configs
         self.video_affine = VisualProjection(
             visual_dim=configs.video_feature_dim,
