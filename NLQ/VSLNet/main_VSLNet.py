@@ -101,6 +101,7 @@ def main_VSLNet(configs, parser):
         )
         # build model
         if(not configs.sameEncoder==1):
+            print("different encoder")
             model = VSLNet_DE(configs=configs, word_vectors=dataset.get("word_vector", None)).to(device)
         else:
             model = VSLNet(configs=configs, word_vectors=dataset.get("word_vector", None)).to(device)
@@ -240,6 +241,7 @@ def main_VSLNet(configs, parser):
         configs = parser.parse_args()
         # build model
         if(not configs.sameEncoder==1):
+            print("different encoder")
             model = VSLNet_DE(configs=configs, word_vectors=dataset.get("word_vector", None)).to(device)
         else:
             model = VSLNet(configs=configs, word_vectors=dataset.get("word_vector", None)).to(device)
