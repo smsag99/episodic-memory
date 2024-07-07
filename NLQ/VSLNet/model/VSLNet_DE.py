@@ -70,7 +70,7 @@ class VSLNet_DE(nn.Module):
         self.feature_encoder = FeatureEncoder_Video(
             dim=configs.dim,
             num_heads=configs.num_heads,
-            kernel_size=7,
+            kernel_size=9,
             num_layers=4,
             max_pos_len=configs.max_pos_len,
             drop_rate=configs.drop_rate,
