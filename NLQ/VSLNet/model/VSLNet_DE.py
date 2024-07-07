@@ -132,8 +132,8 @@ class VSLNet_DE(nn.Module):
         else:
             query_features = self.embedding_net(word_ids, char_ids)
 
-        query_features = self.feature_encoder_Text(query_features, mask=q_mask)
-        video_features = self.feature_encoder_Video(video_features, mask=v_mask)
+        query_features = self.featureEncoder_Text(query_features, mask=q_mask)
+        video_features = self.featureEncoder_Video(video_features, mask=v_mask)
         features = self.cq_attention(video_features, query_features, v_mask, q_mask)
         features = self.cq_concat(features, query_features, q_mask)
         h_score = self.highlight_layer(features, v_mask)
