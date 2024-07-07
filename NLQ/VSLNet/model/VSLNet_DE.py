@@ -59,7 +59,7 @@ class VSLNet_DE(nn.Module):
             dim=configs.dim,
             drop_rate=configs.drop_rate,
         )
-        self.feature_encoder = FeatureEncoder_Text(
+        self.feature_encoder_Text = FeatureEncoder_Text(
             dim=configs.dim,
             num_heads=configs.num_heads,
             kernel_size=7,
@@ -67,7 +67,7 @@ class VSLNet_DE(nn.Module):
             max_pos_len=configs.max_pos_len,
             drop_rate=configs.drop_rate,
         )
-        self.feature_encoder = FeatureEncoder_Video(
+        self.feature_encoder_Video = FeatureEncoder_Video(
             dim=configs.dim,
             num_heads=configs.num_heads,
             kernel_size=9,
@@ -132,8 +132,8 @@ class VSLNet_DE(nn.Module):
         else:
             query_features = self.embedding_net(word_ids, char_ids)
 
-        query_features = self.featureEncoder_Text(query_features, mask=q_mask)
-        video_features = self.featureEncoder_Video(video_features, mask=v_mask)
+        query_features = self.feature_encoder_Text(query_features, mask=q_mask)
+        video_features = self.feature_encoder_Video(video_features, mask=v_mask)
         features = self.cq_attention(video_features, query_features, v_mask, q_mask)
         features = self.cq_concat(features, query_features, q_mask)
         h_score = self.highlight_layer(features, v_mask)
